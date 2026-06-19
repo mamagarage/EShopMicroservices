@@ -27,7 +27,7 @@ public class UpdateProductCommandValidator
 }
 
 
-internal class UpdateProductCommandHandler(IDocumentSession session, ILogger<UpdateProductCommandHandler> logger) 
+internal class UpdateProductCommandHandler(IDocumentSession session) 
     : ICommandHandler<UpdateProductCommand, UpdateProductResult>
 {
 
@@ -37,13 +37,12 @@ internal class UpdateProductCommandHandler(IDocumentSession session, ILogger<Upd
         // save it to the database,
         // and return UpdateProductResult indicating whether the update was successful or not.
 
-        logger.LogInformation("Handling UpdateProductCommand");
+        //logger.LogInformation("Handling UpdateProductCommand");
 
         var product = await session.LoadAsync<Product>(command.Id, cancellationToken);
 
         if (product == null)
         {
-            logger.LogWarning("Product with ID {ProductId} not found", command.Id);
             throw new ProductNotFoundExceptions(command.Id);
         }
 

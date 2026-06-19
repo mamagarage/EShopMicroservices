@@ -10,7 +10,6 @@ public record CreateProductCommand
 // This record represents the result of the CreateProductCommand, containing the Id of the newly created product.   
 public record CreateProductResult(Guid Id);
 
-
 public class CreateProductCommandValidator 
     : AbstractValidator<CreateProductCommand>
 {
@@ -65,7 +64,7 @@ internal class CreateProductCommandHandler(
 */
 
 internal class CreateProductCommandHandler(
-    IDocumentSession session, ILogger<CreateProductCommandHandler> logger)
+    IDocumentSession session)
     : ICommandHandler<CreateProductCommand, CreateProductResult>
 {
     public async Task<CreateProductResult> Handle(CreateProductCommand command, CancellationToken cancellationToken)
@@ -74,7 +73,7 @@ internal class CreateProductCommandHandler(
         // save it to the database,
         // and return CreateProductResult with the Id of the newly created product.
         
-        logger.LogInformation("Handling CreateProductCommand for product: {ProductName}", command.Name);
+        //logger.LogInformation("Handling CreateProductCommand for product: {ProductName}", command.Name);
 
         var product = new Product
         {

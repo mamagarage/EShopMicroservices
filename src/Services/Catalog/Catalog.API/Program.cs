@@ -7,6 +7,7 @@ builder.Services.AddMediatR(config =>
 {
     config.RegisterServicesFromAssembly(assembly);
     config.AddOpenBehavior(typeof(ValidationBehavior<,>));
+    config.AddOpenBehavior(typeof(LogginBehavior<,>));
 });
 builder.Services.AddValidatorsFromAssembly(assembly);
 
@@ -20,9 +21,16 @@ builder.Services.AddCarter();
 // }
 builder.Services.AddMarten(options =>
 {
-    options.Connection(builder.Configuration.GetConnectionString("DataBase"));
+    var connectionString = builder.Configuration.GetConnectionString("DataBase");
+
+    options.Connection(connectionString);
     //options.AutoCreateSchemaObjects = 
 }).UseLightweightSessions(); // UseLightweightSessions is used to configure Marten to use lightweight sessions, which are optimized for read operations and do not track changes to documents. This can improve performance for read-heavy workloads.
+
+if(builder.Environment.IsDevelopment())
+{
+    builder.Services.InitializeMartenWith<CatalogInitialData>();
+}
 
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 

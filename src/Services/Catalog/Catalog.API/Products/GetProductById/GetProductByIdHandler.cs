@@ -6,13 +6,13 @@ public record GetProductByIdResult(Product Product);
 
 
 public class GetProductByQueryIdHandler 
-    (IDocumentSession session, ILogger<GetProductByQueryIdHandler> logger)
+    (IDocumentSession session)
     : IQueryHandler<GetProductByIdQuery, GetProductByIdResult>
 {
 
     public async Task<GetProductByIdResult> Handle(GetProductByIdQuery query, CancellationToken cancellationToken)
     {
-        logger.LogInformation("GetProductByIdQueryHandler.Handle called with Id: {ProductId}", query.Id);
+        //logger.LogInformation("GetProductByIdQueryHandler.Handle called with Id: {ProductId}", query.Id);
 
         var product = await session.LoadAsync<Product>(query.Id, cancellationToken);
 

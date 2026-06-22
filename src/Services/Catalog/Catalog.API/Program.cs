@@ -1,3 +1,5 @@
+using HealthChecks.UI.Client;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -34,6 +36,9 @@ if(builder.Environment.IsDevelopment())
 
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
+builder.Services
+    .AddHealthChecks()
+    .AddNpgSql(builder.Configuration.GetConnectionString("DataBase"));
 
 var app = builder.Build();
 
@@ -42,6 +47,27 @@ app.MapCarter();
 
 
 app.UseExceptionHandler(options =>{ });
+
+app.UseHealthChecks("/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions 
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+    //ResponseWriter = async (context, report) =>
+    //{
+    //    context.Response.ContentType = "application/json";
+    //    var response = new
+    //    {
+    //        status = report.Status.ToString(),
+    //        checks = report.Entries.Select(entry => new
+    //        {
+    //            name = entry.Key,
+    //            status = entry.Value.Status.ToString(),
+    //            exception = entry.Value.Exception?.Message,
+    //            duration = entry.Value.Duration.ToString()
+    //        })
+    //    };
+    //    await context.Response.WriteAsJsonAsync(response);
+    //}
+});
 
 /*
 // Global exception handling middleware

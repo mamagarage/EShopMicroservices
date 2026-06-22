@@ -2,15 +2,17 @@
 
 public record GetProductResponse(IEnumerable<Product> Products);
 
+public record GetProductsRequest(int? PageNumber=1, int PageSize=10);
+
 public class GetProductsEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/products", async (ISender sender) =>
+        app.MapGet("/products", async ([AsParameters] GetProductsRequest request, ISender sender) =>
         {
-            var query = new GetProductsQuery();
+            var query = request.Adapt<GetProductsQuery>();
 
-            GetProductsResult getProductsResult = await sender.Send(query);
+            var getProductsResult = await sender.Send(query);
             
             var getProductResponse = getProductsResult.Adapt<GetProductResponse>();
             

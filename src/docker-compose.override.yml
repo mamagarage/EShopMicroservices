@@ -21,6 +21,14 @@ services:
         - "5433:5432"
       volumes:
         - postgres_basket:/var/lib/postgresql/18/docker
+  
+  distributedcache:
+      container_name: distributedcache_container
+      image: redis
+      restart: always
+      ports:
+        - "6379:6379"      
+        
   catalog.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -34,7 +42,26 @@ services:
       - "6060:8081"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro 
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+  
+  basket.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ConnectionStrings__Database=Server=basketdb;Port=5432;Database=BasketDb;User Id=postgres;Password=postgres;Include Error Detail=true
+      - ConnectionStrings__Redis=distributedcache:6379
+    depends_on:
+      - basketdb
+      - distributedcache
+    ports:
+      - "6001:8080"
+      - "6061:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
 # docker run --help' 
 # docker run --name catalogdb_container -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=CatalogDb -p 5432:5432 -d postgres:18
@@ -58,3 +85,4 @@ services:
 # SELECT * FROM mt_doc_product;
 
 # docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d
+  

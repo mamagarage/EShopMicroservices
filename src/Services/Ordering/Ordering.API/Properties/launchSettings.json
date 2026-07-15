@@ -32,3 +32,7 @@
   },
   "$schema": "https://json.schemastore.org/launchsettings.json"
 }
+
+// Add-Migration InitialCreate -OutputDir Data/Migrations -Project Ordering.Infrastructure -StartupProject Ordering.API
+// Remove-Migration -Project Ordering.Infrastructure -StartupProject Ordering.API
+// Update-Database -Project Ordering.Infrastructure -StartupProject Ordering.API

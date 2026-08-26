@@ -8,7 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services
     .AddApplicationServices()
+    
+    // Add Infrastructure services to the IServiceCollection using the extension method defined in the DependencyInjection class
     .AddInfrastructureServices(builder.Configuration)
+    
     .AddApiServices();
 
 

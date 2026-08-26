@@ -19,7 +19,7 @@ builder.Services.AddMediatR(config =>
     // the sender is the mediator that sends the request to the handler, and the handler is the class that handles the request.
     // in this case the handler is the class that implements the ICommandHandler or IQueryHandler interface.
     config.AddOpenBehavior(typeof(ValidationBehavior<,>));
-    config.AddOpenBehavior(typeof(LogginBehavior<,>));
+    config.AddOpenBehavior(typeof(LoggingBehavior<,>));
 });
 builder.Services.AddValidatorsFromAssembly(assembly);
 

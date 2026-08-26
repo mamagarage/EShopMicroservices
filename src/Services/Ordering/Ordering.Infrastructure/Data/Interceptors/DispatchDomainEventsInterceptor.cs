@@ -3,8 +3,15 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Ordering.Infrastructure.Data.Interceptors;
 
+/// <summary>
+/// This class is an interceptor that dispatches domain events before saving changes to the database.
+/// </summary>
 public class DispatchDomainEventsInterceptor : SaveChangesInterceptor
 {
+    // The IMediator interface is part of the MediatR library,
+    // which is a popular .NET library that implements the Mediator pattern.
+    // The Mediator pattern is a behavioral design pattern that allows for decoupling
+    // the sender of a request from its handler.
     private readonly IMediator mediator;
 
     public DispatchDomainEventsInterceptor(IMediator mediator)

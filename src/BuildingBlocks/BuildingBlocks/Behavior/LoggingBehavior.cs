@@ -5,10 +5,10 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
-namespace BuildingBlocks.Behavior;
+namespace BuildingBlocks.Behaviors;
 
-public class LogginBehavior<TRequest, TResponse>
-    (ILogger<LogginBehavior<TRequest, TResponse>> logger)
+public class LoggingBehavior<TRequest, TResponse>
+    (ILogger<LoggingBehavior<TRequest, TResponse>> logger)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
     where TResponse : notnull

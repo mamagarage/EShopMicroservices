@@ -47,6 +47,13 @@ builder.Services.AddMarten(options =>
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();
+builder.Services.Decorate<IBasketRepository, CachedBasketRepository>();
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    //options.InstanceName = "Basket_";
+});
+
 
 //builder.Services.AddScoped<IBasketRepository, CachedBasketRepository>();
 
@@ -57,20 +64,15 @@ builder.Services.AddScoped<IBasketRepository, BasketRepository>();
 
 //});
 
-builder.Services.Decorate<IBasketRepository, CachedBasketRepository>();
 
-builder.Services.AddStackExchangeRedisCache(options =>
-{
-    options.Configuration = builder.Configuration.GetConnectionString("Redis");
-    //options.InstanceName = "Basket_";
-});
 
+// what purpose does this serve? This code configures a gRPC client for the DiscountProtoService. It sets the address of the gRPC service using the configuration value "GrpcSettings:DiscountUrl". The ConfigurePrimaryHttpMessageHandler method is used to configure the HTTP message handler for the gRPC client, allowing it to accept any server certificate (useful for development or testing environments with self-signed certificates).
+// This setup enables the Basket API to communicate with the Discount gRPC service to retrieve discount information.
 builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(options =>
 {
     options.Address = new Uri(builder.Configuration.GetValue<string>("GrpcSettings:DiscountUrl")!);
     ;
-})
-.ConfigurePrimaryHttpMessageHandler(() =>
+}).ConfigurePrimaryHttpMessageHandler(() =>
 {
     var handler = new HttpClientHandler
     {

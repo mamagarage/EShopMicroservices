@@ -1,5 +1,9 @@
 ﻿namespace Ordering.Application.Orders.EventHandlers;
 
+/// <summary>
+/// OrderCreatedEventHandler 
+/// </summary>
+/// <param name="logger"></param>
 public class OrderCreatedEventHandler(ILogger<OrderCreatedEventHandler> logger)
     : INotificationHandler<OrderCreatedEvent>
 {

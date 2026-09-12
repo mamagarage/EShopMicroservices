@@ -1,0 +1,41 @@
+﻿{
+  "order": {
+    "id": "8fc47bbe-3c5d-46d2-8543-0bfc6cbd1a6e",
+    "customerId": "58c49479-ec65-4de2-86e7-033c546291aa",
+    "orderName": "ORD_5",
+    "shippingAddress": {
+      "firstName": "John",
+      "lastName": "Doe",
+      "emailAddress": "john.doe@example.com",
+      "addressLine": "123 Main St",
+      "country": "USA",
+      "state": "NY",
+      "zipCode": "10001"
+    },
+    "billingAddress": {
+      "firstName": "John",
+      "lastName": "Doe",
+      "emailAddress": "john.doe@example.com",
+      "addressLine": "123 Main St",
+      "country": "USA",
+      "state": "NY",
+      "zipCode": "10001"
+    },
+    "payment": {
+      "cardName": "John Doe",
+      "cardNumber": "4111111111111111",
+      "expiration": "12/2026",
+      "cvv": "123",
+      "paymentMethod": 1
+    },
+    "status": 2,
+    "orderItems": [
+      {
+        "orderId": "4c5d6715-34f7-452e-8bb4-4660308fbb21",
+        "productId": "6ec1297b-ec0a-4aa1-be25-6726e3b51a27",
+        "quantity": 2,
+        "price": 19.99
+      }
+    ]
+  }
+}

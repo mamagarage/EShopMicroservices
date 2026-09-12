@@ -3,6 +3,13 @@ using System.Text.Json;
 
 namespace Basket.API.Data
 {
+    /// <summary>
+    /// A decorator for the IBasketRepository that adds caching functionality using IDistributedCache.
+    /// </summary>
+    /// <param name="repository"></param>
+    /// <param name="cache"></param>
+    /// why a decorator? Because we want to add caching functionality to the existing IBasketRepository without modifying its implementation. This allows us to keep the caching logic separate from the repository logic, 
+    /// making the code more maintainable and testable.
     public class CachedBasketRepository
         (IBasketRepository repository, IDistributedCache cache) 
         : IBasketRepository

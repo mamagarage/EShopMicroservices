@@ -51,9 +51,12 @@ public class DispatchDomainEventsInterceptor : SaveChangesInterceptor
         // The MediatR library is a popular .NET library that implements the Mediator pattern,
         // which allows for decoupling the sender of a request from its handler.
         // In this case, it is used to publish domain events to their respective handlers.
+
+        // it is also clearing the domain events from the aggregates after they have been published,
+        // to prevent them from being published again in future SaveChanges calls.
         aggregates.ToList().ForEach(agg => agg.ClearDomainEvents());
 
-
+        // The foreach loop iterates over each domain event in the domainEvents collection and publishes it using the mediator.
         foreach (var domainEvent in domainEvents)
             await mediator.Publish(domainEvent);
     }

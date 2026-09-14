@@ -12,7 +12,7 @@ builder.Services
     // Add Infrastructure services to the IServiceCollection using the extension method defined in the DependencyInjection class
     .AddInfrastructureServices(builder.Configuration)
     
-    .AddApiServices();
+    .AddApiServices(builder.Configuration);
 
 
 var app = builder.Build();

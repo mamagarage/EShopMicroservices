@@ -1,3 +1,4 @@
+using BuildingBlocks.Messaging.MassTransit;
 using Discount.Grpc;
 using HealthChecks.UI.Client;
 
@@ -44,10 +45,18 @@ builder.Services.AddMarten(options =>
 }).UseLightweightSessions(); // UseLightweightSessions is used to configure Marten to use lightweight sessions, which are optimized for read operations and do not track changes to documents. This can improve performance for read-heavy workloads.
 
 
+// Add custom exception handler middleware to handle exceptions globally in the application.
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();
+
+// Decorate the IBasketRepository with CachedBasketRepository to add caching functionality.
+// This means that when an instance of IBasketRepository is requested, 
+// an instance of CachedBasketRepository will be provided, which wraps the original BasketRepository and adds caching behavior.
 builder.Services.Decorate<IBasketRepository, CachedBasketRepository>();
+
+// Add Redis cache for caching basket data. This allows the application to store and retrieve basket data from a Redis cache,
+// improving performance and scalability.
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = builder.Configuration.GetConnectionString("Redis");
@@ -83,12 +92,31 @@ builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(
     return handler;
 });
 
+// Async Communication Services
+builder.Services.AddMessageBroker(builder.Configuration);
 
+
+// Cross-cutting concerns: Add custom behaviors for validation and logging.
+// These behaviors will be executed before the actual request handler is invoked,
+// allowing you to perform validation and logging in a consistent manner across all requests.
+
+
+// Add custom exception handler middleware to handle exceptions globally in the application.
+// This middleware will catch exceptions thrown during the request processing pipeline and allow you to handle them in a centralized manner,
+// providing consistent error responses to clients.
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
+
+
 builder.Services
+
+    // Add health checks to monitor the health of the application and its dependencies.
     .AddHealthChecks()
-    .AddNpgSql(builder.Configuration.GetConnectionString("DataBase")!)
+
+    // Add PostgreSQL health check to monitor the health of the PostgreSQL database.
+    .AddNpgSql(builder.Configuration.GetConnectionString("Database")!)
+
+    // Add Redis health check to monitor the health of the Redis cache.
     .AddRedis(builder.Configuration.GetConnectionString("Redis")!);
 
 
